@@ -12,13 +12,9 @@ public class JDBCConnection {
     public static void main(String[] args) throws SQLException {
         connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/onlinebookstore", "root", "Nero8board1029");
         statement = connection.createStatement();
-        //System.out.println(validInfoForLogin("email","hebaalnouri@gmail.com"));
-        //registerInfo(2,"heba","boo","boo@gmail.com","bombom","0777030443","admin",1);
-        //locationInfo(2,"jordan","amman","tlaa ali","waha");
-        //addBook(7,1,4,1,"lomba lumba",4,578,231);
-        removeBook("lomba lumba");
     }
 
+    // check the validation of the login information.
     public static boolean validInfoForLogin(String infoType,String info){
         try {
             resultSet = statement.executeQuery("select * from user");
@@ -34,6 +30,7 @@ public class JDBCConnection {
         return false;
     }
 
+    // add new user.
     public static void registerInfo(int userId ,String firstName,String lastName,String email,String password,String phoneNumber,String userType,int locationID){
         try{
             //statement.executeUpdate("insert into genre (genre_id,type) values (14,'Manga')");
@@ -46,6 +43,7 @@ public class JDBCConnection {
         }
     }
 
+    // get information for a new location and insert them to the database in the location table.
     public static void locationInfo(int locationId, String country, String state, String city, String address){
         try{
             statement.executeUpdate("insert into location (location_id,country,state,city,address)"+
@@ -56,6 +54,7 @@ public class JDBCConnection {
         }
     }
 
+    // get information for a new book and insert them to the database in the book table.
     public static void addBook(int bookId, int publisherId, int authorId, int genre_id, String title, int price, int stocks, int sellings){
         try{
             //statement.executeUpdate("insert into genre (genre_id,type) values (14,'Manga')");
@@ -67,16 +66,29 @@ public class JDBCConnection {
             e.printStackTrace();
         }
     }
-    public static void removeBook(String title){
+
+    // function to remove any column from any table. ex(remove book, remove author, remove user, etc).
+    public static void removeColumnInAnyTable(String table, String infoType,String info){
         try{
-            statement.executeUpdate("DELETE FROM `onlinebookstore`.`book` WHERE (`title` = '"+title+"')");
+            statement.executeUpdate("DELETE FROM `onlinebookstore`.`"+table+"` WHERE (`" + infoType +"` = '"+ info +"')");
 
         } catch (SQLException e){
             e.printStackTrace();
         }
     }
 
+    //get one attribute from any table with different conditions.
+    public static void getAnyAttributeFromAnyTable(String table, String findBy, String infoType,String info){
+        try {
+            resultSet = statement.executeQuery("select "+infoType+" from "+table+" WHERE "+findBy+" = "+info);
+            //resultSet = statement.executeQuery("SELECT * FROM genre WHERE genre_id = 1");
+            resultSet.next();
+            System.out.println(resultSet.getString(infoType));
 
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
 
 
 
